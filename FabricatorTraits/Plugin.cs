@@ -6,10 +6,10 @@ using Obeliskial_Essentials;
 using System.IO;
 using UnityEngine;
 using System;
-using static TheSubclass.Traits;
+using static Fabricator.Traits;
 using BepInEx.Configuration;
 
-namespace TheSubclass
+namespace Fabricator
 {
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
     [BepInDependency("com.stiffmeds.obeliskialessentials")]
@@ -24,8 +24,8 @@ namespace TheSubclass
         public static ConfigEntry<bool> EnableDebugging { get; set; }
 
 
-        public static string characterName = "<HeroName>";
-        public static string subclassName = "<Subclass>"; // needs caps
+        public static string characterName = "Fabricator";
+        public static string subclassName = "Fabricator"; // needs caps
         public static string debugBase = "Binbin - Testing " + characterName + " ";
 
         private void Awake()
@@ -43,7 +43,7 @@ namespace TheSubclass
                 _version: PluginInfo.PLUGIN_VERSION,
                 _date: ModDate,
                 _link: @"https://github.com/binbinmods/heronamesubclass",
-                _contentFolder: "<Hero>",
+                _contentFolder: "Fabricator",
                 _type: ["content", "hero", "trait"]
             );
             // apply patches

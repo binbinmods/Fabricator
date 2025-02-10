@@ -7,10 +7,10 @@ using Obeliskial_Essentials;
 using System.IO;
 using static UnityEngine.Mathf;
 using UnityEngine.TextCore.LowLevel;
-using static TheSubclass.Plugin;
+using static Fabricator.Plugin;
 using System.Collections.ObjectModel;
 
-namespace TheSubclass
+namespace Fabricator
 {
     public class CustomFunctions
     {

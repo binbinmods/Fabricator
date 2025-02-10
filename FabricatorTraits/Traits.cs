@@ -4,18 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 using Obeliskial_Content;
 using UnityEngine;
-using static TheSubclass.CustomFunctions;
-using static TheSubclass.Plugin;
+using static Fabricator.CustomFunctions;
+using static Fabricator.Plugin;
 
-namespace TheSubclass
+namespace Fabricator
 {
     [HarmonyPatch]
     internal class Traits
     {
         // list of your trait IDs
-        public static string heroName = "<heroName>";
+        // public static string heroName = "<heroName>";
 
-        public static string subclassname = "<subclassname>";
+        // public static string subclassname = "<subclassname>";
 
         public static string[] simpleTraitList = ["trait0", "trait1a", "trait1b", "trait2a", "trait2b", "trait3a", "trait3b", "trait4a", "trait4b"];
 
@@ -27,8 +27,10 @@ namespace TheSubclass
         static string trait4a = myTraitList[7];
         static string trait4b = myTraitList[8];
 
+        static bool BeginTurnFlag = false;
 
-        public static string debugBase = "Binbin - Testing " + heroName + " ";
+
+        // public static string debugBase = "Binbin - Testing " + characterName + " ";
 
         public static void DoCustomTrait(string _trait, ref Trait __instance)
         {
@@ -51,65 +53,81 @@ namespace TheSubclass
             Hero[] teamHero = MatchManager.Instance.GetTeamHero();
             NPC[] teamNpc = MatchManager.Instance.GetTeamNPC();
 
+            if (!IsLivingHero(_character))
+            {
+                return;
+            }
+
             if (_trait == trait0)
-            { // TODO trait 0
+            { // When you play an Enchantment on a hero grant 1 Inspire and 1 Energize
                 string traitName = traitData.TraitName;
                 string traitId = _trait;
                 LogDebug($"Handling Trait {traitId}: {traitName}");
 
-                if (!IsLivingHero(_character))
+                
+                if (_castedCard!=null && _castedCard.HasCardType(Enums.CardType.Enchantment) && IsLivingHero(_target))
                 {
-                    return;
-                }
-                int bonusActivations = _character.HaveTrait(trait4a) ? 1 : 0;
-                if (CanIncrementTraitActivations(_trait, bonusActivations:bonusActivations))
-                {
-                    IncrementTraitActivations(_trait);
-                    DisplayRemainingChargesForTrait(ref _character, traitData);
+                    _target.SetAura(_character,GetAuraCurseData("inspire"),1,useCharacterMods:false);
+                    _target.SetAura(_character,GetAuraCurseData("energize"),1,useCharacterMods:false);
+                    DisplayTraitScroll(ref _character, traitData);
 
                 }
             }
 
 
             else if (_trait == trait2a)
-            { // TODO trait 2a
+            { // Effects on this hero that occur at the start of turn happen twice.
                 string traitName = traitData.TraitName;
                 string traitId = _trait;
                 LogDebug($"Handling Trait {traitId}: {traitName}");
-                DisplayTraitScroll(ref _character, traitData);
-
+                BeginTurnFlag = !BeginTurnFlag;         
+                
+                if(BeginTurnFlag)
+                {
+                    _character.BeginTurn();                    
+                    DisplayTraitScroll(ref _character, traitData);
+                }                   
             }
 
 
 
             else if (_trait == trait2b)
-            { // TODO trait 2b
+            {   // Taunt +1. Handled in json.
+                // Taunt on this hero can stack. -- handled in GACM
+                // This hero gains 5% more Block and Shield for each stack of Taunt.
                 string traitName = traitData.TraitName;
                 string traitId = _trait;
                 LogDebug($"Handling Trait {traitId}: {traitName}");
+                if( _auxInt >=0 && (_auxString == "shield" || _auxString == "block"))
+                {
+                    AuraCurseData shieldOrBlock = GetAuraCurseData(_auxString);
+                    int bonusCharges = Mathf.RoundToInt(_auxInt * 0.05f * _character.GetAuraCharges("taunt"));
+                    _character.SetAura(_character,shieldOrBlock,bonusCharges,useCharacterMods:false);
+
+                }
                 DisplayTraitScroll(ref _character, traitData);
 
             }
 
             else if (_trait == trait4a)
-            { // TODO trait 4a
+            { // trait4a: Whenever a hero plays an Enchantment, shuffle into your deck a copy of it that costs 2 more and can target any hero. 
+                // handled in SetEvent
                 string traitName = traitData.TraitName;
                 string traitId = _trait;
-                LogDebug($"Handling Trait {traitId}: {traitName}");
+                // LogDebug($"Handling Trait {traitId}: {traitName}");
 
             }
 
             else if (_trait == trait4b)
-            { // TODO trait 4b
+            { // At end of turn, all heroes gain 10 Block and Shield for every Taunt you have.
                 string traitName = traitData.TraitName;
                 string traitId = _trait;
                 LogDebug($"Handling Trait {traitId}: {traitName}");
-                if (CanIncrementTraitActivations(_trait))
-                {
-                    IncrementTraitActivations(_trait);
-                    DisplayRemainingChargesForTrait(ref _character, traitData);
+                int nToApply = 10*_character.GetAuraCharges("taunt");
+                ApplyAuraCurseToAll("block",nToApply,AppliesTo.Heroes,_character,useCharacterMods:true);
+                ApplyAuraCurseToAll("shield",nToApply,AppliesTo.Heroes,_character,useCharacterMods:true);
+                DisplayTraitScroll(ref _character, traitData);
 
-                }
             }
 
         }
@@ -138,74 +156,26 @@ namespace TheSubclass
         [HarmonyPatch(typeof(Character), "SetEvent")]
         public static void SetEventPrefix(ref Character __instance, ref Enums.EventActivation theEvent, Character target = null)
         {
-            /*if (theEvent == Enums.EventActivation.AuraCurseSet && !__instance.IsHero && target != null && target.IsHero && target.HaveTrait("ulfvitrconductor") && __instance.HasEffect("spark"))
-            { // if NPC has wet applied to them, deal 50% of their sparks as indirect lightning damage
-                __instance.IndirectDamage(Enums.DamageType.Lightning, Functions.FuncRoundToInt((float)__instance.GetAuraCharges("spark") * 0.5f));
-            }
-            if (theEvent == Enums.EventActivation.BeginTurn && __instance.IsHero && (__instance.HaveTrait("pestilyhealingtoxins")||__instance.HaveTrait("pestilytoxichealing"))){
-                level5ActivationCounter=0;
-                // Plugin.Log.LogInfo("Binbin - PestilyBiohealer - Reset Activation Counter: "+ level5ActivationCounter);
+            // trait4a: Whenever a hero plays an Enchantment, shuffle into your deck a copy of it that costs 2 more and can target any hero. 
+            if (theEvent == Enums.EventActivation.CastCard && __instance.IsHero && AtOManager.Instance.TeamHaveTrait(trait4a)){
+                CardData _castedCard = Traverse.Create(__instance).Field("castedCard").GetValue<CardData>();
+                if (_castedCard == null || !_castedCard.HasCardType(Enums.CardType.Enchantment)) {return;}
+
+                _castedCard.TargetSide = Enums.CardTargetSide.Friend;
+                _castedCard.TargetType = Enums.CardTargetType.Single;
+                _castedCard.TargetPosition = Enums.CardTargetPosition.Anywhere;
+                _castedCard.EnergyCost += 2;
+                int heroIndex = 0;
+                MatchManager.Instance.GenerateNewCard(1, _castedCard.Id, false, Enums.CardPlace.RandomDeck, heroIndex: heroIndex, copyDataFromThisCard:_castedCard);   
+
+
             }
             
-            */
+            
         }
 
 
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(AtOManager), "HeroLevelUp")]
-        public static bool HeroLevelUpPrefix(ref AtOManager __instance, Hero[] ___teamAtO, int heroIndex, string traitId)
-        {
-            Hero hero = ___teamAtO[heroIndex];
-            Plugin.Log.LogDebug(debugBase + "Level up before conditions for subclass " + hero.SubclassName + " trait id " + traitId);
-
-            string traitOfInterest = myTraitList[4]; //Learn real magic
-            if (hero.AssignTrait(traitId))
-            {
-                TraitData traitData = Globals.Instance.GetTraitData(traitId);
-                if ((UnityEngine.Object)traitData != (UnityEngine.Object)null && traitId == traitOfInterest)
-                {
-                    Plugin.Log.LogDebug(debugBase + "Learn Real Magic inside conditions");
-                    Globals.Instance.SubClass[hero.SubclassName].HeroClassSecondary = Enums.HeroClass.Mage;
-                }
-
-            }
-            return true;
-        }
-
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(Character), nameof(Character.DamageBonus))]
-        public static void DamageBonusPostfix(ref Character __instance, ref float[] __result, Enums.DamageType DT)
-        {
-            LogDebug("DamageBonusPostfix");
-            // __result is a float[] of [bonusFlatDamage, bonusPercentDamage]
-            if (!IsLivingHero(__instance) || AtOManager.Instance == null || MatchManager.Instance == null)
-                return;
-
-            string traitOfInterest = trait4a;
-            if (AtOManager.Instance.CharacterHaveTrait(__instance.SubclassName, traitOfInterest))// && DT == Enums.DamageType.All)
-            {
-                int bonusDamage = 1;
-                float bonusPercentDamage = 10.0f;
-                __result[0] += bonusDamage;
-                __result[1] += bonusPercentDamage;
-            }
-        }
-
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(Character), nameof(Character.GetTraitDamagePercentModifiers))]
-        public static void GetTraitDamagePercentModifiersPostfix(ref Character __instance, ref float __result, Enums.DamageType DamageType)
-        {
-            LogInfo("GetTraitDamagePercentModifiersPostfix");
-            // trait0: Gain 5% damage 
-            string traitOfInterest = trait0;
-            if (IsLivingHero(__instance) && AtOManager.Instance!= null && AtOManager.Instance.CharacterHaveTrait(__instance.SubclassName, traitOfInterest)&& MatchManager.Instance!=null)
-            {                
-                int percentToIncrease = 5;
-                __result += percentToIncrease;
-            }
-        }
-
-
+       
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(AtOManager), "GlobalAuraCurseModificationByTraitsAndItems")]
@@ -218,11 +188,12 @@ namespace TheSubclass
 
             switch (_acId)
             {
-                case "burn":
-                    traitOfInterest = trait0;
-                    if (IfCharacterHas(characterOfInterest, CharacterHas.Trait, traitOfInterest, AppliesTo.None))
+                case "taunt":
+                    traitOfInterest = trait2b;
+                    // trait2b: Taunt +1. Taunt on this hero can stack. This hero gains 5% more Block and Shield for each stack of Taunt.
+                    if (IfCharacterHas(characterOfInterest, CharacterHas.Trait, traitOfInterest, AppliesTo.ThisHero))
                     {
-                        __result.ACName = "something";
+                        __result.GainCharges = true;
                     }
                     break;
             }
