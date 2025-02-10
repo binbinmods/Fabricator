@@ -1,0 +1,15 @@
+{
+    "Card0": "fabricatormultipurposekit",
+    "Card1": "steelskin",
+    "Card2": "intercept",
+    "Card3": "barricade",
+    "Card4": "aimedshot",
+    "Card5": "",
+    "CardSpecial0": "",
+    "CardSpecial1": "",
+    "PackClass": "warrior",
+    "PackID": "thesteelspartan",
+    "PackName": "The Steel Spartan",
+    "PerkList": [],
+    "RequiredClass": "fabricator"
+}
