@@ -1,0 +1,15 @@
+{
+    "BaseSkin": true,
+    "PerkLevel": 0,
+    "SkinGO": "skinthesteelspartan",
+    "SkinID": "fabricatorbase",
+    "SkinName": "Default",
+    "SkinOrder": 0,
+    "SkinSubclass": "fabricator",
+    "Sku": "",
+    "SpritePortrait": "thesteelspartanPortrait",
+    "SpritePortraitGrande": "thesteelspartanPortraitGrande",
+    "SpriteSilueta": "thesteelspartanSilueta",
+    "SpriteSiluetaGrande": "thesteelspartanSiluetaGrande",
+    "SteamStat": ""
+}

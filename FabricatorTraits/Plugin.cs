@@ -39,10 +39,10 @@ namespace Fabricator
             RegisterMod(
                 _name: PluginInfo.PLUGIN_NAME,
                 _author: "binbin",
-                _description: "<Hero, The Subclass>.",
+                _description: "The Steel Spartan, the Fabricator.",
                 _version: PluginInfo.PLUGIN_VERSION,
                 _date: ModDate,
-                _link: @"https://github.com/binbinmods/heronamesubclass",
+                _link: @"https://github.com/binbinmods/Fabricator",
                 _contentFolder: "Fabricator",
                 _type: ["content", "hero", "trait"]
             );

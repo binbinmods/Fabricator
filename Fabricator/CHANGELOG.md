@@ -1,3 +1,7 @@
-# 1.0.0
+# 0.1.1
 
-Initial release.
+First batch of bug fixes
+
+# 0.1.0
+
+Initial pre-release.

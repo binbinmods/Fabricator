@@ -1,5 +1,5 @@
 {
-    "Activation": "",
+    "Activation": "None",
     "AuraCurseBonus1": "",
     "AuraCurseBonus2": "",
     "AuraCurseBonus3": "",
@@ -39,5 +39,5 @@
     "TimesPerTurn": 0,
     "TraitCard": "fabricatorholdtheline",
     "TraitCardForAllHeroes": "",
-    "TraitName": "Hold the line"
+    "TraitName": "Hold the Line"
 }

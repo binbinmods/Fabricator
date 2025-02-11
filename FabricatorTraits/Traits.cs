@@ -6,6 +6,7 @@ using Obeliskial_Content;
 using UnityEngine;
 using static Fabricator.CustomFunctions;
 using static Fabricator.Plugin;
+using System.Text.RegularExpressions;
 
 namespace Fabricator
 {
@@ -17,7 +18,7 @@ namespace Fabricator
 
         // public static string subclassname = "<subclassname>";
 
-        public static string[] simpleTraitList = ["trait0", "trait1a", "trait1b", "trait2a", "trait2b", "trait3a", "trait3b", "trait4a", "trait4b"];
+        public static string[] simpleTraitList = ["fabricatortrait0", "fabricatortrait1a", "fabricatortrait1b", "fabricatortrait2a", "fabricatortrait2b", "fabricatortrait3a", "fabricatortrait3b", "fabricatortrait4a", "fabricatortrait4b"];
 
         public static string[] myTraitList = simpleTraitList; //(string[])simpleTraitList.Select(trait => heroName + trait); // Needs testing
 
@@ -63,13 +64,17 @@ namespace Fabricator
                 string traitName = traitData.TraitName;
                 string traitId = _trait;
                 LogDebug($"Handling Trait {traitId}: {traitName}");
-
+                if (_castedCard!=null)
+                {
+                    LogDebug($"Casting {_castedCard.Id}");
+                }
                 
                 if (_castedCard!=null && _castedCard.HasCardType(Enums.CardType.Enchantment) && IsLivingHero(_target))
                 {
+                    LogDebug($"Executing Trait {traitId}: {traitName}");
                     _target.SetAura(_character,GetAuraCurseData("inspire"),1,useCharacterMods:false);
                     _target.SetAura(_character,GetAuraCurseData("energize"),1,useCharacterMods:false);
-                    DisplayTraitScroll(ref _character, traitData);
+                    // DisplayTraitScroll(ref _character, traitData);
 
                 }
             }
@@ -84,8 +89,9 @@ namespace Fabricator
                 
                 if(BeginTurnFlag)
                 {
-                    _character.BeginTurn();                    
-                    DisplayTraitScroll(ref _character, traitData);
+                    LogDebug($"Executing Trait {traitId}: {traitName}");                    
+                    _character.SetEvent(Enums.EventActivation.BeginTurn);                    
+                    // DisplayTraitScroll(ref _character, traitData);
                 }                   
             }
 
@@ -100,12 +106,13 @@ namespace Fabricator
                 LogDebug($"Handling Trait {traitId}: {traitName}");
                 if( _auxInt >=0 && (_auxString == "shield" || _auxString == "block"))
                 {
+                    LogDebug($"Executing Trait {traitId}: {traitName}");
                     AuraCurseData shieldOrBlock = GetAuraCurseData(_auxString);
                     int bonusCharges = Mathf.RoundToInt(_auxInt * 0.05f * _character.GetAuraCharges("taunt"));
                     _character.SetAura(_character,shieldOrBlock,bonusCharges,useCharacterMods:false);
 
                 }
-                DisplayTraitScroll(ref _character, traitData);
+                // DisplayTraitScroll(ref _character, traitData);
 
             }
 
@@ -126,7 +133,7 @@ namespace Fabricator
                 int nToApply = 10*_character.GetAuraCharges("taunt");
                 ApplyAuraCurseToAll("block",nToApply,AppliesTo.Heroes,_character,useCharacterMods:true);
                 ApplyAuraCurseToAll("shield",nToApply,AppliesTo.Heroes,_character,useCharacterMods:true);
-                DisplayTraitScroll(ref _character, traitData);
+                // DisplayTraitScroll(ref _character, traitData);
 
             }
 
@@ -157,15 +164,34 @@ namespace Fabricator
         public static void SetEventPrefix(ref Character __instance, ref Enums.EventActivation theEvent, Character target = null)
         {
             // trait4a: Whenever a hero plays an Enchantment, shuffle into your deck a copy of it that costs 2 more and can target any hero. 
-            if (theEvent == Enums.EventActivation.CastCard && __instance.IsHero && AtOManager.Instance.TeamHaveTrait(trait4a)){
-                CardData _castedCard = Traverse.Create(__instance).Field("castedCard").GetValue<CardData>();
-                if (_castedCard == null || !_castedCard.HasCardType(Enums.CardType.Enchantment)) {return;}
+            if (AtOManager.Instance ==null || MatchManager.Instance == null) {return;}
+            string traitOfInterest = trait4a;
+            if (theEvent == Enums.EventActivation.CastCard && __instance.IsHero && AtOManager.Instance.TeamHaveTrait(traitOfInterest)){
+                
+                if(MatchManager.Instance.GetHeroHeroActive().HaveTrait(traitOfInterest)) {return;}
 
+                CardData _castedCard = Traverse.Create(__instance).Field("castedCard").GetValue<CardData>();
+                if (_castedCard == null || !_castedCard.HasCardType(Enums.CardType.Enchantment)) {LogDebug("Null Card");return;}
+                LogDebug("Executing Trait4a");
+                
                 _castedCard.TargetSide = Enums.CardTargetSide.Friend;
                 _castedCard.TargetType = Enums.CardTargetType.Single;
                 _castedCard.TargetPosition = Enums.CardTargetPosition.Anywhere;
                 _castedCard.EnergyCost += 2;
+                
+                Hero[] teamHero = MatchManager.Instance.GetTeamHero();
                 int heroIndex = 0;
+                for (int i = 0; i < teamHero.Length; i++)
+                {
+                    Hero hero = teamHero[i];
+                    if(IsLivingHero(hero) && hero.HaveTrait(trait4a))
+                    {
+                        heroIndex = i;
+                    }
+                }
+
+                
+
                 MatchManager.Instance.GenerateNewCard(1, _castedCard.Id, false, Enums.CardPlace.RandomDeck, heroIndex: heroIndex, copyDataFromThisCard:_castedCard);   
 
 
@@ -193,6 +219,7 @@ namespace Fabricator
                     // trait2b: Taunt +1. Taunt on this hero can stack. This hero gains 5% more Block and Shield for each stack of Taunt.
                     if (IfCharacterHas(characterOfInterest, CharacterHas.Trait, traitOfInterest, AppliesTo.ThisHero))
                     {
+                        LogDebug("Executing Trait2b GACM");
                         __result.GainCharges = true;
                     }
                     break;

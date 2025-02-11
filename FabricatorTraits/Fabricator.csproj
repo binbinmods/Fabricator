@@ -4,9 +4,9 @@
     <TargetFramework>netstandard2.1</TargetFramework>
 	<RootNamespace>Fabricator</RootNamespace>
 	<Product>Fabricator</Product>
-    <AssemblyName>com.binbin.Subclass</AssemblyName>
+    <AssemblyName>com.binbin.Fabricator</AssemblyName>
     <Description>The Steel Spartan, The Fabricator</Description>
-    <Version>1.0.0</Version>
+    <Version>0.1.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
@@ -42,7 +42,7 @@
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="../../../../plugins" />
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="../CharacterModTemplate/BepInEx/plugins" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="../Fabricator/BepInEx/plugins" />
   </Target>
 
 </Project>

@@ -1,15 +1,15 @@
-# <Charactername>, the <Subclass>
+# The Steel Spartan, the Fabricator
 
-A hero mod, introducing <CharacterName>, a Shaman imprisoned by Gorio. 
+A hero mod, introducing The Steel Spartan, a Shaman imprisoned by Gorio. 
 
-This currently does not include any events or quests related to <CharacterName>. This will be updated in the future with a future mod release, it will include a sub-zone or three and a few quests. 
+This currently does not include any events or quests related to The Steel Spartan. This will be updated in the future with a future mod release, it will include a sub-zone or three and a few quests. 
 
 A couple of notes:
 ## Notes:
 - I understand that things are going to be janky at times, and there are definitely bugs that will be worked out
-- **What to do if <CharacterName> is not unlocked:** Due to some jankiness of the way the code works, <CharacterName> is unlocked only for the profile that is open when you launch the game (and for new profiles). So if they aren't unlocked in the correct profile, switch to that profile, close the game and re-open it and they will be unlocked. I'll fix this in the future, but most people won't notice it. You can also just use the profile editor to fix it.
-- There are **no character events** for <CharacterName> at this time beyond the ones that are available to all characters of a given class (such as pet trainers or healers being able to remove cards at Rest areas).
-- <CharacterName>'s selection location (in the Hero Selection screen) is intentionally in position 5 (the far right). I have not yet automated the process of placing characters, and this is to accommodate other heroes. If you wish to change this, you can access the `<subclass>.json` file and the `OrderInList` property with whatever you wish.
+- **What to do if The Steel Spartan is not unlocked:** Due to some jankiness of the way the code works, The Steel Spartan is unlocked only for the profile that is open when you launch the game (and for new profiles). So if they aren't unlocked in the correct profile, switch to that profile, close the game and re-open it and they will be unlocked. I'll fix this in the future, but most people won't notice it. You can also just use the profile editor to fix it.
+- There are **no character events** for The Steel Spartan at this time beyond the ones that are available to all characters of a given class (such as pet trainers or healers being able to remove cards at Rest areas).
+- The Steel Spartan's selection location (in the Hero Selection screen) is intentionally in position 5 (the far right). I have not yet automated the process of placing characters, and this is to accommodate other heroes. If you wish to change this, you can access the `fabricator.json` file and the `OrderInList` property with whatever you wish.
 
 This mod relies on [Obeliskial Content](https://across-the-obelisk.thunderstore.io/package/meds/Obeliskial_Content/).
 
@@ -53,7 +53,7 @@ This mod relies on [Obeliskial Content](https://across-the-obelisk.thunderstore.
 4. Extract the archive into the game folder. Your _Across the Obelisk_ folder should now contain a _BepInEx_ folder and a _doorstop\_libs_ folder.
 5. Run the game. If everything runs correctly, you will see this mod in the list of registered mods on the main menu.
 6. Press F5 to open/close the Config Manager and F1 to show/hide mod version information.
-7. Note: I am not certain about these install instructions. In the worst case, just copy _TheWiseWolf.dll_ into the _BepInEx\plugins_ folder, and the _<CharacterName>_ folder (the one with the subfolders containing the json files) into _BepInEx\config\Obeliskial\_importing_
+7. Note: I am not certain about these install instructions. In the worst case, just copy _TheWiseWolf.dll_ into the _BepInEx\plugins_ folder, and the _The Steel Spartan_ folder (the one with the subfolders containing the json files) into _BepInEx\config\Obeliskial\_importing_
 
 ## Installation (automatic)
 
