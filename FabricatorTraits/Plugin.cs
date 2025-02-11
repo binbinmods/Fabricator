@@ -57,9 +57,9 @@ namespace Fabricator
             if (EnableDebugging.Value)
             {
                 Log.LogDebug(debugBase + msg);
-            }
-            
+            }            
         }
+        
         internal static void LogInfo(string msg)
         {
             Log.LogInfo(debugBase + msg);

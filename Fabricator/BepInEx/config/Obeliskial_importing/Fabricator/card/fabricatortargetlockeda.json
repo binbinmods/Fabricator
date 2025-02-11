@@ -1,9 +1,9 @@
 {
-    "Aura": "block",
-    "Aura2": "taunt",
+    "Aura": "",
+    "Aura2": "",
     "Aura3": "",
-    "AuraCharges": 15,
-    "AuraCharges2": 1,
+    "AuraCharges": 0,
+    "AuraCharges2": 0,
     "AuraCharges3": 0,
     "AuraSelf": "",
     "AuraSelf2": "",

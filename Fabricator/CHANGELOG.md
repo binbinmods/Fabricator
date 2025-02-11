@@ -1,3 +1,11 @@
+# 0.3.0
+
+Fixed blue Torso Terror not targeting properly. Fixed target locked applying block and taunt when played in addition to when activated.
+
+# 0.2.0
+
+Fixed Overclocking and Great Minds Think Alike. Still minor bugs with Great Minds Think Alike
+
 # 0.1.1
 
 First batch of bug fixes

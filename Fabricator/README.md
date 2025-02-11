@@ -1,4 +1,4 @@
-# The Steel Spartan, the Fabricator
+# Steel Spartan, the Fabricator
 
 A hero mod, introducing The Steel Spartan, a Shaman imprisoned by Gorio. 
 

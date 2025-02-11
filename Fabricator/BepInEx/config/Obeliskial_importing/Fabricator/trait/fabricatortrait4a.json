@@ -23,7 +23,7 @@
     "DamageBonusPercentValue": 0.0,
     "DamageBonusPercentValue2": 0.0,
     "DamageBonusPercentValue3": 0.0,
-    "Description": "Whenever a different hero plays an Enchantment, shuffle into your deck a copy of it that costs 2 more and can target any hero. ",
+    "Description": "Whenever a different hero plays an Enchantment on a hero, shuffle into your deck a copy of it that costs 2 more, has Vanish, and can target any hero. ",
     "HealFlatBonus": 0,
     "HealPercentBonus": 0.0,
     "HealReceivedFlatBonus": 0,
@@ -39,5 +39,5 @@
     "TimesPerTurn": 0,
     "TraitCard": "",
     "TraitCardForAllHeroes": "",
-    "TraitName": "Great minds think alike"
+    "TraitName": "Great Minds Think Alike"
 }
