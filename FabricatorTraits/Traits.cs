@@ -54,7 +54,7 @@ namespace Fabricator
             Hero[] teamHero = MatchManager.Instance.GetTeamHero();
             NPC[] teamNpc = MatchManager.Instance.GetTeamNPC();
 
-            if (!IsLivingHero(_character))
+            if (!IsLivingHero(_character)||MatchManager.Instance == null)
             {
                 return;
             }
@@ -64,16 +64,24 @@ namespace Fabricator
                 string traitName = traitData.TraitName;
                 string traitId = _trait;
                 LogDebug($"Handling Trait {traitId}: {traitName}");
-                if (_castedCard!=null)
+                if (_castedCard != null)
                 {
                     LogDebug($"Casting {_castedCard.Id}");
                 }
-                
-                if (_castedCard!=null && _castedCard.HasCardType(Enums.CardType.Enchantment) && IsLivingHero(_target))
+
+                if (_castedCard != null && _castedCard.HasCardType(Enums.CardType.Enchantment))
                 {
                     LogDebug($"Executing Trait {traitId}: {traitName}");
-                    _target.SetAura(_character,GetAuraCurseData("inspire"),1,useCharacterMods:false);
-                    _target.SetAura(_character,GetAuraCurseData("energize"),1,useCharacterMods:false);
+                    if (MatchManager.Instance == null) { return; }
+
+                    Transform targetTransform = Traverse.Create(MatchManager.Instance).Field("targetTransform").GetValue<Transform>(); ;
+                    if (targetTransform == null) { LogDebug("null transform"); return; }
+
+                    Hero targetHero = MatchManager.Instance.GetHeroById(targetTransform.name);
+                    if (!IsLivingHero(targetHero)) { return; }
+
+                    targetHero.SetAura(_character, GetAuraCurseData("inspire"), 1, useCharacterMods: false);
+                    targetHero.SetAura(_character, GetAuraCurseData("energize"), 1, useCharacterMods: false);
                     // DisplayTraitScroll(ref _character, traitData);
 
                 }
@@ -85,14 +93,23 @@ namespace Fabricator
                 string traitName = traitData.TraitName;
                 string traitId = _trait;
                 LogDebug($"Handling Trait {traitId}: {traitName}");
-                BeginTurnFlag = !BeginTurnFlag;         
-                
-                if(BeginTurnFlag)
+                // BeginTurnFlag = !BeginTurnFlag;
+                BeginTurnFlag = true;
+                if (BeginTurnFlag)
                 {
-                    LogDebug($"Executing Trait {traitId}: {traitName}");                    
-                    _character.SetEvent(Enums.EventActivation.BeginTurn);                    
+                    LogDebug($"Executing Trait {traitId}: {traitName}");
+                    // _character.SetEvent(Enums.EventActivation.BeginTurn);
+
+                    LogDebug($"Activating items for {traitId}: {traitName} for character {_character.SubclassName}");
+                    MatchManager.Instance.IsBeginTournPhase = true;
+                    _character.ActivateItem(Enums.EventActivation.BeginTurn, null, 0, "");
+                    _character.ActivateItem(Enums.EventActivation.BeginTurnCardsDealt, null, 0, "");
+                    _character.ActivateItem(Enums.EventActivation.BeginTurnAboutToDealCards, null, 0, "");
+                    LogDebug($"Post Activating items ");
+                    // LogDebug($"Activating traits for {traitId}: {traitName}");
+                    // _character.ActivateTrait(Enums.EventActivation.BeginTurn,null,0,"");
                     // DisplayTraitScroll(ref _character, traitData);
-                }                   
+                }
             }
 
 
@@ -104,12 +121,12 @@ namespace Fabricator
                 string traitName = traitData.TraitName;
                 string traitId = _trait;
                 LogDebug($"Handling Trait {traitId}: {traitName}");
-                if( _auxInt >=0 && (_auxString == "shield" || _auxString == "block"))
+                if (_auxInt >= 0 && (_auxString == "shield" || _auxString == "block"))
                 {
                     LogDebug($"Executing Trait {traitId}: {traitName}");
                     AuraCurseData shieldOrBlock = GetAuraCurseData(_auxString);
                     int bonusCharges = Mathf.RoundToInt(_auxInt * 0.05f * _character.GetAuraCharges("taunt"));
-                    _character.SetAura(_character,shieldOrBlock,bonusCharges,useCharacterMods:false);
+                    _character.SetAura(_character, shieldOrBlock, bonusCharges, useCharacterMods: false);
 
                 }
                 // DisplayTraitScroll(ref _character, traitData);
@@ -130,9 +147,9 @@ namespace Fabricator
                 string traitName = traitData.TraitName;
                 string traitId = _trait;
                 LogDebug($"Handling Trait {traitId}: {traitName}");
-                int nToApply = 10*_character.GetAuraCharges("taunt");
-                ApplyAuraCurseToAll("block",nToApply,AppliesTo.Heroes,_character,useCharacterMods:true);
-                ApplyAuraCurseToAll("shield",nToApply,AppliesTo.Heroes,_character,useCharacterMods:true);
+                int nToApply = 10 * _character.GetAuraCharges("taunt");
+                ApplyAuraCurseToAll("block", nToApply, AppliesTo.Heroes, _character, useCharacterMods: true);
+                ApplyAuraCurseToAll("shield", nToApply, AppliesTo.Heroes, _character, useCharacterMods: true);
                 // DisplayTraitScroll(ref _character, traitData);
 
             }
@@ -159,49 +176,59 @@ namespace Fabricator
             return true;
         }
 
-        [HarmonyPrefix]
+        [HarmonyPostfix]
         [HarmonyPatch(typeof(Character), "SetEvent")]
-        public static void SetEventPrefix(ref Character __instance, ref Enums.EventActivation theEvent, Character target = null)
+        public static void SetEventPostfix(ref Character __instance, ref Enums.EventActivation theEvent, Character target = null)
         {
             // trait4a: Whenever a hero plays an Enchantment, shuffle into your deck a copy of it that costs 2 more and can target any hero. 
-            if (AtOManager.Instance ==null || MatchManager.Instance == null) {return;}
+            if (AtOManager.Instance == null || MatchManager.Instance == null) { return; }
             string traitOfInterest = trait4a;
-            if (theEvent == Enums.EventActivation.CastCard && __instance.IsHero && AtOManager.Instance.TeamHaveTrait(traitOfInterest)){
-                
-                if(MatchManager.Instance.GetHeroHeroActive().HaveTrait(traitOfInterest)) {return;}
 
-                CardData _castedCard = Traverse.Create(__instance).Field("castedCard").GetValue<CardData>();
-                if (_castedCard == null || !_castedCard.HasCardType(Enums.CardType.Enchantment)) {LogDebug("Null Card");return;}
+            if (theEvent == Enums.EventActivation.CastCard && IsLivingHero(__instance) && AtOManager.Instance.TeamHaveTrait(traitOfInterest))
+            {
+                LogDebug($"Handling Trait4a {__instance.SourceName}");
+
+                if (MatchManager.Instance.GetHeroHeroActive().HaveTrait(traitOfInterest)) { LogDebug("Fabricator Casting Card"); return; }
+
+                CardData _cardActive = Traverse.Create(MatchManager.Instance).Field("cardActive").GetValue<CardData>();
+                if (_cardActive != null) { LogDebug($"Active card: {_cardActive.CardName}"); }
+                if (_cardActive == null || !_cardActive.HasCardType(Enums.CardType.Enchantment)) { LogDebug("Null Card"); return; }
+                if (_cardActive.TargetSide == Enums.CardTargetSide.Enemy) {return;}
                 LogDebug("Executing Trait4a");
-                
-                _castedCard.TargetSide = Enums.CardTargetSide.Friend;
-                _castedCard.TargetType = Enums.CardTargetType.Single;
-                _castedCard.TargetPosition = Enums.CardTargetPosition.Anywhere;
-                _castedCard.EnergyCost += 2;
-                
+
                 Hero[] teamHero = MatchManager.Instance.GetTeamHero();
                 int heroIndex = 0;
                 for (int i = 0; i < teamHero.Length; i++)
                 {
                     Hero hero = teamHero[i];
-                    if(IsLivingHero(hero) && hero.HaveTrait(trait4a))
+                    if (IsLivingHero(hero) && hero.HaveTrait(trait4a))
                     {
                         heroIndex = i;
                     }
                 }
 
-                
 
-                MatchManager.Instance.GenerateNewCard(1, _castedCard.Id, false, Enums.CardPlace.RandomDeck, heroIndex: heroIndex, copyDataFromThisCard:_castedCard);   
+                // CardData cardData = MatchManager.Instance.GetCardData(text);
+                string text = MatchManager.Instance.CreateCardInDictionary(_cardActive.Id + "test");
+                CardData cardData = _cardActive;
+                cardData.Id = text;
+                cardData.InternalId = text;
+                cardData.Vanish = true;
+                cardData.TargetSide = Enums.CardTargetSide.Friend;
+                cardData.TargetType = Enums.CardTargetType.Single;
+                cardData.TargetPosition = Enums.CardTargetPosition.Anywhere;
+                cardData.EnergyReductionPermanent = -2;
 
+                MatchManager.Instance.GenerateNewCard(1, text, true, Enums.CardPlace.RandomDeck, heroIndex: heroIndex, cardDataForModification: cardData, copyDataFromThisCard: cardData);
+                MatchManager.Instance.CreateLogCardModification(cardData.InternalId, MatchManager.Instance.GetHero(heroIndex));
 
             }
-            
-            
+
+
         }
 
 
-       
+
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(AtOManager), "GlobalAuraCurseModificationByTraitsAndItems")]
