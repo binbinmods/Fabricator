@@ -1,8 +1,8 @@
 # Steel Spartan, the Fabricator
 
-A hero mod, introducing The Steel Spartan, a Shaman imprisoned by Gorio. 
+A hero mod, introducing The Steel Spartan, an engineer who uses technology to buff up his allies. 
 
-This currently does not include any events or quests related to The Steel Spartan. This will be updated in the future with a future mod release, it will include a sub-zone or three and a few quests. 
+This currently does not include any events or quests related to The Steel Spartan. 
 
 A couple of notes:
 ## Notes:

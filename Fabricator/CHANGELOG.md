@@ -1,3 +1,7 @@
+# 0.4.0
+
+Reworked Great Minds Think Alike to not break in multiplayer.
+
 # 0.3.0
 
 Fixed blue Torso Terror not targeting properly. Fixed target locked applying block and taunt when played in addition to when activated.

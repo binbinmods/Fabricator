@@ -63,11 +63,11 @@ namespace Fabricator
             { // When you play an Enchantment on a hero grant 1 Inspire and 1 Energize
                 string traitName = traitData.TraitName;
                 string traitId = _trait;
-                LogDebug($"Handling Trait {traitId}: {traitName}");
-                if (_castedCard != null)
-                {
-                    LogDebug($"Casting {_castedCard.Id}");
-                }
+                // LogDebug($"Handling Trait {traitId}: {traitName}");
+                // if (_castedCard != null)
+                // {
+                //     LogDebug($"Casting {_castedCard.Id}");
+                // }
 
                 if (_castedCard != null && _castedCard.HasCardType(Enums.CardType.Enchantment))
                 {
@@ -92,20 +92,18 @@ namespace Fabricator
             { // Effects on this hero that occur at the start of turn happen twice.
                 string traitName = traitData.TraitName;
                 string traitId = _trait;
-                LogDebug($"Handling Trait {traitId}: {traitName}");
-                // BeginTurnFlag = !BeginTurnFlag;
-                BeginTurnFlag = true;
+                BeginTurnFlag = !BeginTurnFlag;
+                // BeginTurnFlag = true;
                 if (BeginTurnFlag)
                 {
                     LogDebug($"Executing Trait {traitId}: {traitName}");
-                    // _character.SetEvent(Enums.EventActivation.BeginTurn);
-
-                    LogDebug($"Activating items for {traitId}: {traitName} for character {_character.SubclassName}");
-                    MatchManager.Instance.IsBeginTournPhase = true;
-                    _character.ActivateItem(Enums.EventActivation.BeginTurn, null, 0, "");
-                    _character.ActivateItem(Enums.EventActivation.BeginTurnCardsDealt, null, 0, "");
-                    _character.ActivateItem(Enums.EventActivation.BeginTurnAboutToDealCards, null, 0, "");
-                    LogDebug($"Post Activating items ");
+                    // MatchManager.Instance.IsBeginTournPhase = true;
+                    _character.SetEvent(Enums.EventActivation.BeginTurn);
+                    _character.SetEvent(Enums.EventActivation.BeginTurnCardsDealt);
+                    _character.SetEvent(Enums.EventActivation.BeginTurnAboutToDealCards);
+                    // _character.ActivateItem(Enums.EventActivation.BeginTurn, null, 0, "");
+                    // _character.ActivateItem(Enums.EventActivation.BeginTurnCardsDealt, null, 0, "");
+                    // _character.ActivateItem(Enums.EventActivation.BeginTurnAboutToDealCards, null, 0, "");
                     // LogDebug($"Activating traits for {traitId}: {traitName}");
                     // _character.ActivateTrait(Enums.EventActivation.BeginTurn,null,0,"");
                     // DisplayTraitScroll(ref _character, traitData);
@@ -186,14 +184,15 @@ namespace Fabricator
 
             if (theEvent == Enums.EventActivation.CastCard && IsLivingHero(__instance) && AtOManager.Instance.TeamHaveTrait(traitOfInterest))
             {
-                LogDebug($"Handling Trait4a {__instance.SourceName}");
+                // LogDebug($"Handling Trait4a {__instance.SourceName}");
 
-                if (MatchManager.Instance.GetHeroHeroActive().HaveTrait(traitOfInterest)) { LogDebug("Fabricator Casting Card"); return; }
+                if (MatchManager.Instance.GetHeroHeroActive().HaveTrait(traitOfInterest)) { LogDebug("Fabricator is Casting the Enchantment - Do nothing"); return; }
 
                 CardData _cardActive = Traverse.Create(MatchManager.Instance).Field("cardActive").GetValue<CardData>();
-                if (_cardActive != null) { LogDebug($"Active card: {_cardActive.CardName}"); }
+                if (_cardActive != null) { LogDebug($"Enchantment being played: {_cardActive.CardName}"); }
                 if (_cardActive == null || !_cardActive.HasCardType(Enums.CardType.Enchantment)) { LogDebug("Null Card"); return; }
                 if (_cardActive.TargetSide == Enums.CardTargetSide.Enemy) {return;}
+                
                 LogDebug("Executing Trait4a");
 
                 Hero[] teamHero = MatchManager.Instance.GetTeamHero();
@@ -207,24 +206,26 @@ namespace Fabricator
                     }
                 }
 
-
+                // int heroIndex = MatchManager.Instance.GetHeroActive();
+                int casterIndex = __instance.HeroIndex;
+                
+                    // heroIndex=MatchManager.Instance.GetHeroActive();
                 // CardData cardData = MatchManager.Instance.GetCardData(text);
-                string text = MatchManager.Instance.CreateCardInDictionary(_cardActive.Id + "test");
-                CardData cardData = _cardActive;
-                cardData.Id = text;
-                cardData.InternalId = text;
+                string text = MatchManager.Instance.CreateCardInDictionary(_cardActive.Id);
+                CardData cardData = MatchManager.Instance.GetCardData(text);
+                // cardData.InternalId = text;
                 cardData.Vanish = true;
-                cardData.TargetSide = Enums.CardTargetSide.Friend;
-                cardData.TargetType = Enums.CardTargetType.Single;
-                cardData.TargetPosition = Enums.CardTargetPosition.Anywhere;
                 cardData.EnergyReductionPermanent = -2;
+                // LogDebug($"Enchantment Description - {cardData.DescriptionNormalized}");
 
-                MatchManager.Instance.GenerateNewCard(1, text, true, Enums.CardPlace.RandomDeck, heroIndex: heroIndex, cardDataForModification: cardData, copyDataFromThisCard: cardData);
+                // MatchManager.Instance.GenerateNewCard(1, text, true, Enums.CardPlace.RandomDeck, heroIndex: heroIndex, cardDataForModification: cardData, copyDataFromThisCard: cardData);
+                MatchManager.Instance.GenerateNewCard(1, text, true, Enums.CardPlace.RandomDeck, heroIndex: heroIndex, copyDataFromThisCard: cardData);
                 MatchManager.Instance.CreateLogCardModification(cardData.InternalId, MatchManager.Instance.GetHero(heroIndex));
-
+                
+                cardData.EnergyReductionPermanent = -1;
+                MatchManager.Instance.GenerateNewCard(1, text, true, Enums.CardPlace.RandomDeck, heroIndex: casterIndex, copyDataFromThisCard: cardData);
+                MatchManager.Instance.CreateLogCardModification(cardData.InternalId, MatchManager.Instance.GetHero(casterIndex));
             }
-
-
         }
 
 
@@ -234,7 +235,7 @@ namespace Fabricator
         [HarmonyPatch(typeof(AtOManager), "GlobalAuraCurseModificationByTraitsAndItems")]
         public static void GlobalAuraCurseModificationByTraitsAndItemsPostfix(ref AtOManager __instance, ref AuraCurseData __result, string _type, string _acId, Character _characterCaster, Character _characterTarget)
         {
-            LogInfo($"GACM {subclassName}");
+            // LogInfo($"GACM {subclassName}");
 
             Character characterOfInterest = _type == "set" ? _characterTarget : _characterCaster;
             string traitOfInterest;
