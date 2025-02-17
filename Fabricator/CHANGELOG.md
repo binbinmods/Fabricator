@@ -1,3 +1,11 @@
+# 0.5.0
+
+Multipurpose Kit now reduces card costs
+
+Reworked great minds thing alike to continually increase enchantment cost
+
+Hopefully fixed issues with Overclocking desyncing with specific items.
+
 # 0.4.0
 
 Reworked Great Minds Think Alike to not break in multiplayer.

@@ -147,7 +147,7 @@
     "SpecialValueModifierGlobal": 0,
     "AddCard": 1,
     "AddCardChoose": 3,
-    "AddCardReducedCost": 0,
+    "AddCardReducedCost": 1,
     "AddCardCostTurn": false,
     "AddCardFrom": "Game",
     "AddCardId": "",
