@@ -212,20 +212,23 @@ namespace Fabricator
                 // int heroIndex = MatchManager.Instance.GetHeroActive();
                 int casterIndex = __instance.HeroIndex;
                 
-                    // heroIndex=MatchManager.Instance.GetHeroActive();
-                // CardData cardData = MatchManager.Instance.GetCardData(text);
                 string text = MatchManager.Instance.CreateCardInDictionary(_cardActive.Id);
                 CardData cardData = MatchManager.Instance.GetCardData(text);
                 // cardData.InternalId = text;
                 cardData.Vanish = true;
 
+                // LogDebug($"Enchant being cast = {_cardActive.Id}");
+                // LogDebug($"Energy Costs: \n For Show: {_cardActive.EnergyCostForShow} \n Original: {_cardActive.EnergyCostOriginal} \n ReductionPermanent: {_cardActive.EnergyReductionPermanent} \n Regular EnergyCost: {_cardActive.EnergyCost} \n ReductionTemp: {_cardActive.EnergyReductionTemporal} \n FinalCost: {cardData.GetCardFinalCost()}");
+                
+                int toIncrease = -1*(_cardActive.GetCardFinalCost() - _cardActive.EnergyCostOriginal);
+                cardData.EnergyReductionPermanent = toIncrease;
+
                 // Adds enchantment to Fabricator
                 MatchManager.Instance.GenerateNewCard(1, text, true, Enums.CardPlace.RandomDeck, heroIndex: fabricatorIndex, copyDataFromThisCard: cardData);
                 MatchManager.Instance.CreateLogCardModification(cardData.InternalId, MatchManager.Instance.GetHero(fabricatorIndex));
 
-
+                
                 cardData.EnergyReductionPermanent -= 1;
-                // LogDebug($"Enchantment Description - {cardData.DescriptionNormalized}");
 
                 // Add enchantment to Other Hero
                 MatchManager.Instance.GenerateNewCard(1, text, true, Enums.CardPlace.RandomDeck, heroIndex: casterIndex, copyDataFromThisCard: cardData);

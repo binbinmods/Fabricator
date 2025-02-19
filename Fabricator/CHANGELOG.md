@@ -1,3 +1,13 @@
+# 0.6.0
+
+Fixed Mental Mutilator improper Id
+
+Defence Drone can now target anyone.
+
+Slimmed model down a bit.
+
+Rework for Great Minds Think Alike
+
 # 0.5.0
 
 Multipurpose Kit now reduces card costs

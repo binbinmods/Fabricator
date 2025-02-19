@@ -23,7 +23,7 @@
     "DamageBonusPercentValue": 0.0,
     "DamageBonusPercentValue2": 0.0,
     "DamageBonusPercentValue3": 0.0,
-    "Description": "Whenever a different hero plays an Enchantment on a hero, shuffle into your deck a copy of it with Vanish into their deck with +1 cost and your deck with +2 cost. ",
+    "Description": "Whenever a different hero plays an Enchantment on a hero, shuffle with Vanish into your deck and theirs. The version in the other hero's deck has the cost increased by 1, the version in your deck has the cost unchanged ",
     "HealFlatBonus": 0,
     "HealPercentBonus": 0.0,
     "HealReceivedFlatBonus": 0,
