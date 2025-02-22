@@ -4,6 +4,8 @@ A hero mod, introducing The Steel Spartan, an engineer who uses technology to bu
 
 This currently does not include any events or quests related to The Steel Spartan. 
 
+Designed by @jonahds29
+
 A couple of notes:
 ## Notes:
 - I understand that things are going to be janky at times, and there are definitely bugs that will be worked out
@@ -13,34 +15,45 @@ A couple of notes:
 
 This mod relies on [Obeliskial Content](https://across-the-obelisk.thunderstore.io/package/meds/Obeliskial_Content/).
 
+
 <details>
-<summary>Traits</summary>
+<summary>Hero Overview</summary>
+
+### Overview
+![Fabricator](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/fabricator.png)
+
+
+### Starter Card
+![Defense Drone](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/defensedrone.png)
+![Attack Turret](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/attackturret.png)
+![Target Locked](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/targetlocked.png)
 
 ### Level 1
-- Wisdom of The Ancients: Burn, Chill, and Spark Charges on enemies additionally apply -0.2% resistance to Holy Damage per charge. At the end of your turn, all heroes heal for 12% of the Burn Charges, Chill Charges, and Shock Charges in play. -This heal does not gain bonuses-
-
+- Quick Thinking: When you play an Enchantment on a hero grant 1 Inspire and 1 Energize
 
 ### Level 2
 
-![Augur's Wrath](/Storm_Channeler.png)
+![Mental Mutilator](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/mentalmutilator.png)
+![Elemental Repeater](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/elementalrepeater.png)
+![Torso Terror](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/torsoterror.png)
 
-![Augur's Blessing](/Waters_of_Life.png)
+![Hold the Line](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/holdtheline.png)
 
 ### Level 3
 
-- Magus Duality: When you play a Mage Card, reduce the cost of the highest cost Healer Card in your hand by 1 until discarded. When you play a Healer Card, reduce the cost of the highest cost Mage Card in your hand by 1 until discarded. (3 times / per turn)
-- Animist Energy: At the start of your turn, Dispel 3 targeting yourself, and reduce the cost of the highest cost card in your hand by 2 until discarded.
+- Overclocking: Effects on this hero that occur at the start of turn happen twice
+- Preparing for Distaster: Taunt +1. Taunt on this hero can stack. This hero gains 5% more Block and Shield for each stack of Taunt.
 
 ### Level 4
 
-![Elemental Focus](./Electric_Current.png)
+![Think Fast!](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/thinkfast.png)
 
-![Bountiful Restoration](../Tears_of_the_Spririts.png)
+![Decoy Kit](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/decoykit.png)
 
 ### Level 5
 
-- Yggdrasil's Fury: Sanctify +1. All Damage done +20%. When you play a "Spell" card, Dispel 1 targeting yourself. (4 times / per turn).
-- Grove Warden's Mercy: Regeneration +1. When you play a "Healing Spell" card, Apply 2 Mitigate Charges to All Heroes. (2 times / per turn)
+- Great Minds Think Alike: Whenever a different hero plays an Enchantment on a hero, shuffle with Vanish into your deck and theirs. The version in the other hero's deck has the cost increased by 1, the version in your deck has the cost unchanged. (3x/round)
+- The Great Wall: At end of turn, all heroes gain 10 Block and Shield for every Taunt you have
 
 </details>
 
@@ -63,7 +76,7 @@ This mod relies on [Obeliskial Content](https://across-the-obelisk.thunderstore.
 
 ## Support
 
-This has been updated for version 1.4.
+This has been updated for version 1.5.0.
 
 Hope you enjoy it and if have any issues, ping me in Discord or make a post in the **modding #support-and-requests** channel of the [official Across the Obelisk Discord](https://discord.gg/across-the-obelisk-679706811108163701).
 

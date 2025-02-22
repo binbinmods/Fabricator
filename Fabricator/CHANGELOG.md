@@ -1,3 +1,13 @@
+# 1.0.0
+
+Initial Release
+
+# 0.8.0
+
+Great Minds Think Alike capped at 3x/Round now
+
+Great Minds Think Alike no longer triggers when dead
+
 # 0.7.0 
 
 Great Minds Think Alike capped at 3x/turn
