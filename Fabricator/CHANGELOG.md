@@ -1,3 +1,9 @@
+# 0.7.0 
+
+Great Minds Think Alike capped at 3x/turn
+
+Think Fast now procs 3 times at all levels.
+
 # 0.6.0
 
 Fixed Mental Mutilator improper Id

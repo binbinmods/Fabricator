@@ -185,7 +185,7 @@ namespace Fabricator
             if (AtOManager.Instance == null || MatchManager.Instance == null || !IsLivingHero(__instance)) { return; }
             string traitOfInterest = trait4a;
 
-            if (theEvent == Enums.EventActivation.CastCard && AtOManager.Instance.TeamHaveTrait(traitOfInterest))
+            if (CanIncrementTraitActivations(traitOfInterest) && theEvent == Enums.EventActivation.CastCard && AtOManager.Instance.TeamHaveTrait(traitOfInterest))
             {
                 // LogDebug($"Handling Trait4a {__instance.SourceName}");
 
@@ -234,6 +234,7 @@ namespace Fabricator
                 MatchManager.Instance.GenerateNewCard(1, text, true, Enums.CardPlace.RandomDeck, heroIndex: casterIndex, copyDataFromThisCard: cardData);
                 MatchManager.Instance.CreateLogCardModification(cardData.InternalId, MatchManager.Instance.GetHero(casterIndex));
                 
+                IncrementTraitActivations(traitOfInterest);
             }
 
             // traitOfInterest = trait2a;

@@ -23,7 +23,7 @@
     "DamageBonusPercentValue": 0.0,
     "DamageBonusPercentValue2": 0.0,
     "DamageBonusPercentValue3": 0.0,
-    "Description": "Whenever a different hero plays an Enchantment on a hero, shuffle with Vanish into your deck and theirs. The version in the other hero's deck has the cost increased by 1, the version in your deck has the cost unchanged ",
+    "Description": "Whenever a different hero plays an Enchantment on a hero, shuffle with Vanish into your deck and theirs. The version in the other hero's deck has the cost increased by 1, the version in your deck has the cost unchanged. [3x/turn] ",
     "HealFlatBonus": 0,
     "HealPercentBonus": 0.0,
     "HealReceivedFlatBonus": 0,
@@ -36,7 +36,7 @@
     "ResistModifiedValue2": 0,
     "ResistModifiedValue3": 0,
     "TimesPerRound": 0,
-    "TimesPerTurn": 0,
+    "TimesPerTurn": 3,
     "TraitCard": "",
     "TraitCardForAllHeroes": "",
     "TraitName": "Great Minds Think Alike"

@@ -94,7 +94,7 @@
     "StealAuras": 0,
     "TransferCurses": 0,
     "TargetPosition": "Anywhere",
-    "TargetSide": "Self",
+    "TargetSide": "Friend",
     "TargetType": "Single",
     "Vanish": false,
     "GoldGainQuantity": 0,
