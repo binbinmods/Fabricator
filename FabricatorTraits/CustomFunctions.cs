@@ -934,7 +934,7 @@ namespace Fabricator
         /// Checks to see if you can increment a Trait's activations
         /// </summary>
         /// <param name="traitData">The Trait we are checking</param>
-        public static bool CanIncrementTraitActivations(TraitData traitData, int bonusActivations = 0)
+        public static bool CanIncrementTraitActivations(TraitData traitData, int bonusActivations = 0, bool useRound = false)
         {
             LogDebug("canIncrementTraitActivations");
             if (traitData == null)
@@ -950,7 +950,8 @@ namespace Fabricator
             {
                 return false;
             }
-            if (MatchManager.Instance.activatedTraits.ContainsKey(traitId) && MatchManager.Instance.activatedTraits[traitId] > traitData.TimesPerTurn - 1 + bonusActivations)
+            int activations = useRound ? traitData.TimesPerRound - 1 + bonusActivations: traitData.TimesPerTurn - 1 + bonusActivations;
+            if (MatchManager.Instance.activatedTraits.ContainsKey(traitId) && MatchManager.Instance.activatedTraits[traitId] > activations)
             {
                 // LogDebug("False v2");
                 // LogDebug($"Activation Dict - {CollectionToString(MatchManager.Instance.activatedTraits)}");
@@ -969,10 +970,10 @@ namespace Fabricator
         /// Checks to see if you can increment a Trait's activations
         /// </summary>
         /// <param name="traitId">The id of the trait we are checking</param>
-        public static bool CanIncrementTraitActivations(string traitId, int bonusActivations = 0)
+        public static bool CanIncrementTraitActivations(string traitId, int bonusActivations = 0, bool useRound = false)
         {
             TraitData traitData = Globals.Instance.GetTraitData(traitId);
-            return CanIncrementTraitActivations(traitData, bonusActivations);
+            return CanIncrementTraitActivations(traitData, bonusActivations, useRound);
         }
         /// <summary>
         /// Specifies whether should apply to Auras, Curses, or Both (used when modifying AuraCurses)

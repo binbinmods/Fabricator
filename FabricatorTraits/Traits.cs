@@ -185,7 +185,7 @@ namespace Fabricator
             if (AtOManager.Instance == null || MatchManager.Instance == null || !IsLivingHero(__instance)) { return; }
             string traitOfInterest = trait4a;
 
-            if (CanIncrementTraitActivations(traitOfInterest) && theEvent == Enums.EventActivation.CastCard && AtOManager.Instance.TeamHaveTrait(traitOfInterest))
+            if (CanIncrementTraitActivations(traitOfInterest, useRound: true) && theEvent == Enums.EventActivation.CastCard && AtOManager.Instance.TeamHaveTrait(traitOfInterest))
             {
                 // LogDebug($"Handling Trait4a {__instance.SourceName}");
 
@@ -200,12 +200,14 @@ namespace Fabricator
 
                 Hero[] teamHero = MatchManager.Instance.GetTeamHero();
                 int fabricatorIndex = 0;
+                bool validFabricator = false;
                 for (int i = 0; i < teamHero.Length; i++)
                 {
                     Hero hero = teamHero[i];
                     if (IsLivingHero(hero) && hero.HaveTrait(trait4a))
                     {
                         fabricatorIndex = i;
+                        validFabricator = true;
                     }
                 }
 
@@ -224,17 +226,22 @@ namespace Fabricator
                 cardData.EnergyReductionPermanent = toIncrease;
 
                 // Adds enchantment to Fabricator
-                MatchManager.Instance.GenerateNewCard(1, text, true, Enums.CardPlace.RandomDeck, heroIndex: fabricatorIndex, copyDataFromThisCard: cardData);
-                MatchManager.Instance.CreateLogCardModification(cardData.InternalId, MatchManager.Instance.GetHero(fabricatorIndex));
+                if(validFabricator)
+                {
+                    MatchManager.Instance.GenerateNewCard(1, text, true, Enums.CardPlace.RandomDeck, heroIndex: fabricatorIndex, copyDataFromThisCard: cardData);
+                    MatchManager.Instance.CreateLogCardModification(cardData.InternalId, MatchManager.Instance.GetHero(fabricatorIndex));
+
+                    cardData.EnergyReductionPermanent -= 1;
+
+                    // Add enchantment to Other Hero
+                    MatchManager.Instance.GenerateNewCard(1, text, true, Enums.CardPlace.RandomDeck, heroIndex: casterIndex, copyDataFromThisCard: cardData);
+                    MatchManager.Instance.CreateLogCardModification(cardData.InternalId, MatchManager.Instance.GetHero(casterIndex));
+                    
+                    IncrementTraitActivations(traitOfInterest);
 
                 
-                cardData.EnergyReductionPermanent -= 1;
+                }
 
-                // Add enchantment to Other Hero
-                MatchManager.Instance.GenerateNewCard(1, text, true, Enums.CardPlace.RandomDeck, heroIndex: casterIndex, copyDataFromThisCard: cardData);
-                MatchManager.Instance.CreateLogCardModification(cardData.InternalId, MatchManager.Instance.GetHero(casterIndex));
-                
-                IncrementTraitActivations(traitOfInterest);
             }
 
             // traitOfInterest = trait2a;
