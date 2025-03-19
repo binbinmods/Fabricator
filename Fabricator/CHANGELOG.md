@@ -1,3 +1,9 @@
+# 1.0.1
+
+Fixed OC crash
+
+Cardback no longer shares
+
 # 1.0.0
 
 Initial Release

@@ -24,7 +24,7 @@ This mod relies on [Obeliskial Content](https://across-the-obelisk.thunderstore.
 
 
 ### Starter Card
-![Defense Drone](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/defensedrone.png)
+![Defense Drone](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/defencedrone.png)
 ![Attack Turret](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/attackturret.png)
 ![Target Locked](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/targetlocked.png)
 
@@ -33,7 +33,7 @@ This mod relies on [Obeliskial Content](https://across-the-obelisk.thunderstore.
 
 ### Level 2
 
-![Mental Mutilator](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/mentalmutilator.png)
+![Mental Mutilator](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/mentalmultilator.png)
 ![Elemental Repeater](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/elementalrepeater.png)
 ![Torso Terror](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/torsoterror.png)
 

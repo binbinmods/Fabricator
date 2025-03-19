@@ -366,3 +366,4 @@ FodyWeavers.xsd
 *Traits/obj
 
 *.py
+!*test.py
