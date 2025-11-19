@@ -1,3 +1,7 @@
+# 1.1.0
+
+Update for AtO v1.6.22
+
 # 1.0.1
 
 Fixed OC crash
@@ -14,7 +18,7 @@ Great Minds Think Alike capped at 3x/Round now
 
 Great Minds Think Alike no longer triggers when dead
 
-# 0.7.0 
+# 0.7.0
 
 Great Minds Think Alike capped at 3x/turn
 

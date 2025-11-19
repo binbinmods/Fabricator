@@ -903,9 +903,18 @@ namespace Fabricator
         /// Checks to see if a trait can be incremented. If so, it increments it.
         /// </summary>
         /// <param name="traitData">The Trait we are incrementing</param>
-        public static void IncrementTraitActivations(TraitData traitData)
+        public static void IncrementTraitActivations(TraitData traitData, bool useRound = false)
         {
             string traitId = traitData.Id;
+            if (useRound)
+            {
+
+                if (!MatchManager.Instance.activatedTraitsRound.ContainsKey(traitId))
+                    MatchManager.Instance.activatedTraitsRound.Add(traitId, 1);
+                else
+                    ++MatchManager.Instance.activatedTraitsRound[traitId];
+                return;
+            }
             if (!MatchManager.Instance.activatedTraits.ContainsKey(traitId))
             {
                 MatchManager.Instance.activatedTraits.Add(traitId, 1);
@@ -922,10 +931,10 @@ namespace Fabricator
         /// Checks to see if a trait can be incremented. If so, it increments it.
         /// </summary>
         /// <param name="traitId">The Id of the trait we are incrementing</param>
-        public static void IncrementTraitActivations(string traitId)
+        public static void IncrementTraitActivations(string traitId, bool useRound = false)
         {
             TraitData traitData = Globals.Instance.GetTraitData(traitId);
-            IncrementTraitActivations(traitData);
+            IncrementTraitActivations(traitData, useRound);
         }
 
 
@@ -950,7 +959,21 @@ namespace Fabricator
             {
                 return false;
             }
-            int activations = useRound ? traitData.TimesPerRound - 1 + bonusActivations: traitData.TimesPerTurn - 1 + bonusActivations;
+            // if(!IsLivingHero())
+            // {
+            //     return false;
+            // }
+            int activations;
+            if (useRound)
+            {
+
+                activations = traitData.TimesPerRound - 1 + bonusActivations;
+                if (MatchManager.Instance.activatedTraitsRound != null && MatchManager.Instance.activatedTraitsRound.ContainsKey(traitId) && MatchManager.Instance.activatedTraitsRound[traitId] > activations)
+                    return false;
+                return true;
+            }
+
+            activations = traitData.TimesPerTurn - 1 + bonusActivations;
             if (MatchManager.Instance.activatedTraits.ContainsKey(traitId) && MatchManager.Instance.activatedTraits[traitId] > activations)
             {
                 // LogDebug("False v2");
@@ -1369,7 +1392,7 @@ namespace Fabricator
             for (int index = 0; index < heroHand.Count; ++index)
             {
                 CardData cardData = MatchManager.Instance.GetCardData(heroHand[index]);
-                if ((Object)cardData != (Object)null && (cardData.GetCardTypes().Contains(cardType)||cardType==Enums.CardType.None) && cardData.GetCardFinalCost() > num1)
+                if ((Object)cardData != (Object)null && (cardData.GetCardTypes().Contains(cardType) || cardType == Enums.CardType.None) && cardData.GetCardFinalCost() > num1)
                     num1 = cardData.GetCardFinalCost();
             }
             if (num1 <= 0)
@@ -1377,7 +1400,7 @@ namespace Fabricator
             for (int index = 0; index < heroHand.Count; ++index)
             {
                 CardData cardData = MatchManager.Instance.GetCardData(heroHand[index]);
-                if ((Object)cardData != (Object)null && (cardData.GetCardTypes().Contains(cardType)||cardType==Enums.CardType.None) && cardData.GetCardFinalCost() >= num1)
+                if ((Object)cardData != (Object)null && (cardData.GetCardTypes().Contains(cardType) || cardType == Enums.CardType.None) && cardData.GetCardFinalCost() >= num1)
                     cardDataList.Add(cardData);
             }
             if (cardDataList.Count <= 0)
