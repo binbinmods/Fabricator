@@ -33,28 +33,30 @@ namespace Fabricator
 
         // public static string debugBase = "Binbin - Testing " + characterName + " ";
 
-        public static void DoCustomTrait(string _trait, ref Trait __instance)
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(Trait), "DoTrait")]
+        public static bool DoTrait(Enums.EventActivation _theEvent, string _trait, Character _character, Character _target, int _auxInt, string _auxString, CardData _castedCard, ref Trait __instance)
+        {
+            if ((UnityEngine.Object)MatchManager.Instance == (UnityEngine.Object)null)
+                return false;
+            if (Content.medsCustomTraitsSource.Contains(_trait) && myTraitList.Contains(_trait))
+            {
+                DoCustomTrait(_trait, ref __instance, ref _theEvent, ref _character, ref _target, ref _auxInt, ref _auxString, ref _castedCard);
+                return false;
+            }
+            return true;
+        }
+
+        public static void DoCustomTrait(string _trait, ref Trait __instance, ref Enums.EventActivation _theEvent, ref Character _character, ref Character _target, ref int _auxInt, ref string _auxString, ref CardData _castedCard)
         {
             // get info you may need
-            Enums.EventActivation _theEvent = Traverse.Create(__instance).Field("theEvent").GetValue<Enums.EventActivation>();
-            Character _character = Traverse.Create(__instance).Field("character").GetValue<Character>();
-            Character _target = Traverse.Create(__instance).Field("target").GetValue<Character>();
-            int _auxInt = Traverse.Create(__instance).Field("auxInt").GetValue<int>();
-            string _auxString = Traverse.Create(__instance).Field("auxString").GetValue<string>();
-            CardData _castedCard = Traverse.Create(__instance).Field("castedCard").GetValue<CardData>();
-            Traverse.Create(__instance).Field("character").SetValue(_character);
-            Traverse.Create(__instance).Field("target").SetValue(_target);
-            Traverse.Create(__instance).Field("theEvent").SetValue(_theEvent);
-            Traverse.Create(__instance).Field("auxInt").SetValue(_auxInt);
-            Traverse.Create(__instance).Field("auxString").SetValue(_auxString);
-            Traverse.Create(__instance).Field("castedCard").SetValue(_castedCard);
             TraitData traitData = Globals.Instance.GetTraitData(_trait);
             List<CardData> cardDataList = [];
             List<string> heroHand = MatchManager.Instance.GetHeroHand(_character.HeroIndex);
             Hero[] teamHero = MatchManager.Instance.GetTeamHero();
             NPC[] teamNpc = MatchManager.Instance.GetTeamNPC();
 
-            if (!IsLivingHero(_character)||MatchManager.Instance == null)
+            if (!IsLivingHero(_character) || MatchManager.Instance == null)
             {
                 return;
             }
@@ -154,26 +156,6 @@ namespace Fabricator
 
         }
 
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(Trait), "DoTrait")]
-        public static bool DoTrait(Enums.EventActivation _theEvent, string _trait, Character _character, Character _target, int _auxInt, string _auxString, CardData _castedCard, ref Trait __instance)
-        {
-            if ((UnityEngine.Object)MatchManager.Instance == (UnityEngine.Object)null)
-                return false;
-            Traverse.Create(__instance).Field("character").SetValue(_character);
-            Traverse.Create(__instance).Field("target").SetValue(_target);
-            Traverse.Create(__instance).Field("theEvent").SetValue(_theEvent);
-            Traverse.Create(__instance).Field("auxInt").SetValue(_auxInt);
-            Traverse.Create(__instance).Field("auxString").SetValue(_auxString);
-            Traverse.Create(__instance).Field("castedCard").SetValue(_castedCard);
-            if (Content.medsCustomTraitsSource.Contains(_trait) && myTraitList.Contains(_trait))
-            {
-                DoCustomTrait(_trait, ref __instance);
-                return false;
-            }
-            return true;
-        }
-
         public static bool BeginTurnCardsFlag = false;
         public static bool BeginTurnPreCardsFlag = false;
 
@@ -194,8 +176,8 @@ namespace Fabricator
                 CardData _cardActive = Traverse.Create(MatchManager.Instance).Field("cardActive").GetValue<CardData>();
                 if (_cardActive != null) { LogDebug($"Enchantment being played: {_cardActive.CardName}"); }
                 if (_cardActive == null || !_cardActive.HasCardType(Enums.CardType.Enchantment)) { LogDebug("Null Card"); return; }
-                if (_cardActive.TargetSide == Enums.CardTargetSide.Enemy) {return;}
-                
+                if (_cardActive.TargetSide == Enums.CardTargetSide.Enemy) { return; }
+
                 LogDebug("Executing Trait4a");
 
                 Hero[] teamHero = MatchManager.Instance.GetTeamHero();
@@ -213,7 +195,7 @@ namespace Fabricator
 
                 // int heroIndex = MatchManager.Instance.GetHeroActive();
                 int casterIndex = __instance.HeroIndex;
-                
+
                 string text = MatchManager.Instance.CreateCardInDictionary(_cardActive.Id);
                 CardData cardData = MatchManager.Instance.GetCardData(text);
                 // cardData.InternalId = text;
@@ -221,12 +203,12 @@ namespace Fabricator
 
                 // LogDebug($"Enchant being cast = {_cardActive.Id}");
                 // LogDebug($"Energy Costs: \n For Show: {_cardActive.EnergyCostForShow} \n Original: {_cardActive.EnergyCostOriginal} \n ReductionPermanent: {_cardActive.EnergyReductionPermanent} \n Regular EnergyCost: {_cardActive.EnergyCost} \n ReductionTemp: {_cardActive.EnergyReductionTemporal} \n FinalCost: {cardData.GetCardFinalCost()}");
-                
-                int toIncrease = -1*(_cardActive.GetCardFinalCost() - _cardActive.EnergyCostOriginal);
+
+                int toIncrease = -1 * (_cardActive.GetCardFinalCost() - _cardActive.EnergyCostOriginal);
                 cardData.EnergyReductionPermanent = toIncrease;
 
                 // Adds enchantment to Fabricator
-                if(validFabricator)
+                if (validFabricator)
                 {
                     MatchManager.Instance.GenerateNewCard(1, text, true, Enums.CardPlace.RandomDeck, heroIndex: fabricatorIndex, copyDataFromThisCard: cardData);
                     MatchManager.Instance.CreateLogCardModification(cardData.InternalId, MatchManager.Instance.GetHero(fabricatorIndex));
@@ -236,25 +218,25 @@ namespace Fabricator
                     // Add enchantment to Other Hero
                     MatchManager.Instance.GenerateNewCard(1, text, true, Enums.CardPlace.RandomDeck, heroIndex: casterIndex, copyDataFromThisCard: cardData);
                     MatchManager.Instance.CreateLogCardModification(cardData.InternalId, MatchManager.Instance.GetHero(casterIndex));
-                    
+
                     IncrementTraitActivations(traitOfInterest);
 
-                
+
                 }
 
             }
 
             // traitOfInterest = trait2a;
-            if(theEvent == Enums.EventActivation.BeginTurn && __instance.HaveTrait(trait2a))
+            if (theEvent == Enums.EventActivation.BeginTurn && __instance.HaveTrait(trait2a))
             {
                 BeginTurnFlag = !BeginTurnFlag;
                 if (BeginTurnFlag)
                 {
                     LogDebug($"Executing Trait {trait2a} - BeginTurn");
-                    __instance.SetEvent(Enums.EventActivation.BeginTurn);                                        
+                    __instance.SetEvent(Enums.EventActivation.BeginTurn);
                 }
             }
-            if(theEvent == Enums.EventActivation.BeginTurnCardsDealt && __instance.HaveTrait(trait2a))
+            if (theEvent == Enums.EventActivation.BeginTurnCardsDealt && __instance.HaveTrait(trait2a))
             {
                 BeginTurnCardsFlag = !BeginTurnCardsFlag;
                 if (BeginTurnCardsFlag)
@@ -263,16 +245,16 @@ namespace Fabricator
                     __instance.SetEvent(Enums.EventActivation.BeginTurnCardsDealt);
                 }
             }
-            if(theEvent == Enums.EventActivation.BeginTurnAboutToDealCards && __instance.HaveTrait(trait2a))
+            if (theEvent == Enums.EventActivation.BeginTurnAboutToDealCards && __instance.HaveTrait(trait2a))
             {
                 BeginTurnPreCardsFlag = !BeginTurnPreCardsFlag;
                 if (BeginTurnPreCardsFlag)
                 {
                     LogDebug($"Executing Trait {trait2a} - BeginTurnAboutToDealCards");
-                    __instance.SetEvent(Enums.EventActivation.BeginTurnAboutToDealCards);                    
+                    __instance.SetEvent(Enums.EventActivation.BeginTurnAboutToDealCards);
                 }
             }
-        
+
         }
 
 

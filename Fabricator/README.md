@@ -1,13 +1,15 @@
 # Steel Spartan, the Fabricator
 
-A hero mod, introducing The Steel Spartan, an engineer who uses technology to buff up his allies. 
+A hero mod, introducing The Steel Spartan, an engineer who uses technology to buff up his allies.
 
-This currently does not include any events or quests related to The Steel Spartan. 
+This currently does not include any events or quests related to The Steel Spartan.
 
 Designed by @jonahds29
 
 A couple of notes:
+
 ## Notes:
+
 - I understand that things are going to be janky at times, and there are definitely bugs that will be worked out
 - **What to do if The Steel Spartan is not unlocked:** Due to some jankiness of the way the code works, The Steel Spartan is unlocked only for the profile that is open when you launch the game (and for new profiles). So if they aren't unlocked in the correct profile, switch to that profile, close the game and re-open it and they will be unlocked. I'll fix this in the future, but most people won't notice it. You can also just use the profile editor to fix it.
 - There are **no character events** for The Steel Spartan at this time beyond the ones that are available to all characters of a given class (such as pet trainers or healers being able to remove cards at Rest areas).
@@ -15,20 +17,21 @@ A couple of notes:
 
 This mod relies on [Obeliskial Content](https://across-the-obelisk.thunderstore.io/package/meds/Obeliskial_Content/).
 
-
 <details>
 <summary>Hero Overview</summary>
 
 ### Overview
+
 ![Fabricator](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/fabricator.png)
 
-
 ### Starter Card
+
 ![Defense Drone](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/defencedrone.png)
 ![Attack Turret](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/attackturret.png)
 ![Target Locked](https://raw.githubusercontent.com/binbinmods/Fabricator/refs/heads/main/Assets/targetlocked.png)
 
 ### Level 1
+
 - Quick Thinking: When you play an Enchantment on a hero grant 1 Inspire and 1 Energize
 
 ### Level 2
@@ -57,16 +60,15 @@ This mod relies on [Obeliskial Content](https://across-the-obelisk.thunderstore.
 
 </details>
 
-
 ## Installation (manual)
 
 1. Install [Obeliskial Essentials](https://across-the-obelisk.thunderstore.io/package/meds/Obeliskial_Essentials/) and [Obeliskial Content](https://across-the-obelisk.thunderstore.io/package/meds/Obeliskial_Content/).
 2. Click _Manual Download_ at the top of the page.
 3. In Steam, right-click Across the Obelisk and select _Manage_->_Browse local files_.
-4. Extract the archive into the game folder. Your _Across the Obelisk_ folder should now contain a _BepInEx_ folder and a _doorstop\_libs_ folder.
+4. Extract the archive into the game folder. Your _Across the Obelisk_ folder should now contain a _BepInEx_ folder and a _doorstop_libs_ folder.
 5. Run the game. If everything runs correctly, you will see this mod in the list of registered mods on the main menu.
 6. Press F5 to open/close the Config Manager and F1 to show/hide mod version information.
-7. Note: I am not certain about these install instructions. In the worst case, just copy _TheWiseWolf.dll_ into the _BepInEx\plugins_ folder, and the _The Steel Spartan_ folder (the one with the subfolders containing the json files) into _BepInEx\config\Obeliskial\_importing_
+7. Note: I am not certain about these install instructions. In the worst case, just copy _TheWiseWolf.dll_ into the _BepInEx\plugins_ folder, and the _The Steel Spartan_ folder (the one with the subfolders containing the json files) into _BepInEx\config\Obeliskial_importing_
 
 ## Installation (automatic)
 
@@ -76,10 +78,10 @@ This mod relies on [Obeliskial Content](https://across-the-obelisk.thunderstore.
 
 ## Support
 
-This has been updated for version 1.5.0.
+This has been updated for version 1.7.22.
 
 Hope you enjoy it and if have any issues, ping me in Discord or make a post in the **modding #support-and-requests** channel of the [official Across the Obelisk Discord](https://discord.gg/across-the-obelisk-679706811108163701).
 
 ## Donation
 
-Please do not donate to me. If you wish to support me, I would prefer it if you just gave me feedback. 
+Please do not donate to me. If you wish to support me, I would prefer it if you just gave me feedback.
