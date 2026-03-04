@@ -8,6 +8,7 @@ using UnityEngine;
 using System;
 using static Fabricator.Traits;
 using BepInEx.Configuration;
+// using PluginInfo = Fabricator.PluginInfo;
 
 namespace Fabricator
 {
@@ -57,9 +58,9 @@ namespace Fabricator
             if (EnableDebugging.Value)
             {
                 Log.LogDebug(debugBase + msg);
-            }            
+            }
         }
-        
+
         internal static void LogInfo(string msg)
         {
             Log.LogInfo(debugBase + msg);
